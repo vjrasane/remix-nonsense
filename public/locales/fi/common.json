@@ -1,4 +1,12 @@
 {
   "inputAnswer": "Kirjoita vastaus",
-  "answer": "Vastaa"
+  "answer": "Vastaa",
+  "title": "Otsikko",
+  "description": "Kuvaus",
+  "create": "Luo",
+  "save": "Tallenna",
+  "edit": "Muokkaa",
+  "addExercise": "Lisää osio",
+  "exercise": "Harjoitus",
+  "editExercise": "Muokkaa harjoitusta"
 }

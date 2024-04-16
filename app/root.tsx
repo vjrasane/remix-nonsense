@@ -1,4 +1,3 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import {
   LinksFunction,
   LoaderFunctionArgs,
@@ -8,10 +7,15 @@ import {
 import { Outlet, useLoaderData } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 import { useChangeLanguage } from "remix-i18next/react";
-import { Document } from "./document";
-import { i18next } from "./i18next.server";
-import { theme } from "./theme";
 import { localeCookie } from "./cookies";
+import { Document } from "./components/document.component";
+import { i18next } from "./i18next.server";
+import { cssBundleHref } from "@remix-run/css-bundle";
+// import radix from "@radix-ui/themes/styles.css?url";
+// import "./theme.css";
+import { Navbar } from "./components/navbar/navbar.component";
+// import { Flex, Theme } from "@radix-ui/themes";
+import global from "~/globals.css?url";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
@@ -40,6 +44,15 @@ export const links: LinksFunction = () => {
       rel: "stylesheet",
       href: "https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap",
     },
+    // {
+    //   rel: "stylesheet",
+    //   href: radix,
+    // },
+    {
+      rel: "stylesheet",
+      href: global,
+    },
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];
 };
 
@@ -56,9 +69,12 @@ export default function Root() {
 
   return (
     <Document locale={locale} dir={i18n.dir()}>
-      <ChakraProvider theme={theme}>
+      {/* <Theme accentColor="jade" className="h-dvh"> */}
+      <main className="h-full">
+        <Navbar />
         <Outlet />
-      </ChakraProvider>
+      </main>
+      {/* </Theme> */}
     </Document>
   );
 }

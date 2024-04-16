@@ -1,5 +1,5 @@
 import { RemixBrowser } from "@remix-run/react";
-import { startTransition, StrictMode, useState } from "react";
+import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
 import { i18n } from "./i18n";
 import i18next from "i18next";
@@ -7,27 +7,6 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { getInitialNamespaces } from "remix-i18next/client";
-import createEmotionCache, { defaultCache } from "./createEmotionCache";
-import { ClientStyleContext } from "./context";
-import { CacheProvider } from "@emotion/react";
-
-interface ClientCacheProviderProps {
-  children: React.ReactNode;
-}
-
-function ClientCacheProvider({ children }: ClientCacheProviderProps) {
-  const [cache, setCache] = useState(defaultCache);
-
-  function reset() {
-    setCache(createEmotionCache());
-  }
-
-  return (
-    <ClientStyleContext.Provider value={{ reset }}>
-      <CacheProvider value={cache}>{children}</CacheProvider>
-    </ClientStyleContext.Provider>
-  );
-}
 
 async function hydrate() {
   await i18next
@@ -53,13 +32,11 @@ async function hydrate() {
   startTransition(() => {
     hydrateRoot(
       document,
-      <ClientCacheProvider>
         <I18nextProvider i18n={i18next}>
           <StrictMode>
             <RemixBrowser />
           </StrictMode>
         </I18nextProvider>
-      </ClientCacheProvider>
     );
   });
 }

@@ -1,40 +1,27 @@
-import { Button, Flex, Text } from "@radix-ui/themes";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { QuizView } from "~/components/quiz.component";
-import { Exercise, Quiz } from "~/model/v1/quiz";
-import { ClientOnly } from "remix-utils/client-only";
+import { Link, useLoaderData } from "@remix-run/react";
+import { string } from "decoders";
+import { useTranslation } from "react-i18next";
+import { getQuizById } from "~/database/db-client";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const quizId = params.quizId;
-  const exercise: Exercise = {
-    version: 1,
-    type: "single input answer",
-    prompt: "this is the question?",
-    answers: ["answer"],
-    caseSensitive: false,
-    ignoreWhitespace: false,
-  };
-  const quiz: Quiz = {
-    version: 1,
-    name: "quiz",
-    timestamp: new Date().toISOString(),
-    segments: [
-      {
-        version: 1,
-        exercise,
-      },
-    ],
-  };
-  return json({ quizId, quiz });
+  const quizId = string.verify(params.quizId);
+
+  const quiz = await getQuizById(quizId);
+  if (!quiz) throw json({ error: "notFound" }, { status: 404 });
+  return json(quiz);
 };
 
 export default function QuizPage() {
-  const { quiz } = useLoaderData<typeof loader>();
+  const { t } = useTranslation();
+  const { quiz, content } = useLoaderData<typeof loader>();
 
-  return (
-    <Flex direction="column" gap="2">
-      <ClientOnly>{() => <QuizView quiz={quiz} />}</ClientOnly>
-    </Flex>
-  );
+  return null;
+  // <Flex direction="column" gap="2">
+  //   <Heading>{quiz.title}</Heading>
+  //   {quiz.description && <Heading size="2">{quiz.description}</Heading>}
+  //   <Link to="edit">
+  //     <Button>{t("edit")}</Button>
+  //   </Link>
+  // </Flex>
 }

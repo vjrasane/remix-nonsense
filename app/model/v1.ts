@@ -2,17 +2,16 @@ import {
   object,
   constant,
   string,
-  nonEmptyArray,
   nullish,
   boolean,
   either,
   DecoderType,
   nonEmptyString,
   positiveInteger,
-  iso8601,
+  array,
 } from "decoders";
-
-const version = constant(1);
+export const VERSION = 1;
+const version = constant(VERSION);
 
 export const SelectAnswerOption = object({
   label: string,
@@ -20,10 +19,9 @@ export const SelectAnswerOption = object({
 });
 
 export const MultiOptionSelectAnswer = object({
-  version,
   type: constant("multi option select answer"),
   prompt: string,
-  options: nonEmptyArray(SelectAnswerOption),
+  options: array(SelectAnswerOption),
   requireCorrect: nullish(positiveInteger, 1),
 });
 
@@ -32,30 +30,27 @@ export type MultiOptionSelectAnswer = DecoderType<
 >;
 
 export const SingleInputAnswer = object({
-  version,
   type: constant("single input answer"),
-  prompt: nonEmptyString,
-  answers: nonEmptyArray(string),
+  prompt: string,
+  answers: array(string),
   caseSensitive: nullish(boolean, false),
   ignoreWhitespace: nullish(boolean, false),
 });
 
 export type SingleInputAnswer = DecoderType<typeof SingleInputAnswer>;
 
-export const Exercise = either(SingleInputAnswer, MultiOptionSelectAnswer);
+export const Exercise = either(SingleInputAnswer);
 
 export type Exercise = DecoderType<typeof Exercise>;
 
-export const Segment = object({
+export const QuizContent = object({
   version,
-  exercise: Exercise,
+  exercises: array(Exercise),
 });
 
-export const Quiz = object({
-  version,
-  timestamp: iso8601.transform((d) => d.toISOString()),
-  name: nonEmptyString,
-  segments: nonEmptyArray(Segment),
-});
+export type QuizContent = DecoderType<typeof QuizContent>;
 
-export type Quiz = DecoderType<typeof Quiz>;
+export const emptyContent: QuizContent = {
+  version: 1,
+  exercises: [],
+};

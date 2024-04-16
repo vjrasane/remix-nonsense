@@ -1,7 +1,7 @@
-import { Container, Heading } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import { Quiz } from "~/model/v1/quiz";
 import { ExerciseView } from "./exercise/exercise.component";
+import { Container, Heading } from "@radix-ui/themes";
 
 export const QuizView: FunctionComponent<{ quiz: Quiz }> = ({ quiz }) => {
   const [progress, setProgress] = useState([]);
