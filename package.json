@@ -11,7 +11,7 @@
     "start": "remix-serve build/server/index.js",
     "typecheck": "tsc",
     "sync": "npm run gen && npm run db",
-    "gen": "prisma generate",
+    "gen": "drizzle-kit generate:pg",
     "db": "prisma db push",
     "data": "prisma studio"
   },
@@ -47,7 +47,6 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.368.0",
     "match-sorter": "^6.3.1",
-    "pg": "^8.11.5",
     "postgres": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

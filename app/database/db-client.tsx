@@ -1,19 +1,25 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Prisma, PrismaClient, Quiz } from "@prisma/client";
-import pg from "pg";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres"
+import * as schema from "./schema"
 import { QuizContent, emtpyContent } from "~/model";
+import { eq } from "drizzle-orm";
+import { emptyContent } from "~/model/v1";
+import { SelectObjectContentCommand } from "@aws-sdk/client-s3";
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const{DB_HOST , DB_PORT, DB_USER, DB_PASSWORD, DB_NAME} = process.env
+const connectionString = `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
-const { Pool } = pg;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const client = postgres(connectionString)
+const db = drizzle(client, { schema}) 
+
 
 export const getQuizById = async (
   id: string
-): Promise<{ quiz: Quiz; content: QuizContent } | null> => {
-  const data = await prisma.quiz.findUnique({ where: { id } });
+): Promise<{ quiz: schema.Quiz; content: QuizContent } | null> => {
+  const data = await db.query.quiz.findFirst({
+    where: eq(schema.quiz.id, id)
+  })
   if (!data) return null;
   return {
     quiz: data,
@@ -22,29 +28,22 @@ export const getQuizById = async (
 };
 
 export const createQuiz = async (
-  input: Pick<Quiz, "title" | "description">
-): Promise<{ quiz: Quiz; content: QuizContent }> => {
-  const data = await prisma.quiz.create({
-    data: {
-      ...input,
-      content: emtpyContent,
-    },
-  });
-  return {
-    quiz: data,
-    content: QuizContent.verify(data.content),
-  };
+  input: Pick<schema.InsertQuiz, "title" | "description">
+): Promise<string | null> => {
+  const [{ id }] = await db.insert(schema.quiz).values({
+    ...input,
+    content: emptyContent,
+  }).returning({ id: schema.quiz.id })
+  return id
 };
-type UpdateQuizInput = Prisma.Args<typeof prisma.quiz, "update">["data"];
 
 export const updateQuiz = async (
   id: string,
-  input: UpdateQuizInput
-): Promise<{ quiz: Quiz; content: QuizContent }> => {
-  const data = await prisma.quiz.update({
-    where: { id },
-    data: input,
-  });
+  input: Partial<schema.InsertQuiz>
+): Promise<{ quiz: schema.Quiz; content: QuizContent }> => {
+  const [data] = await db.update(schema.quiz).set({
+    ...input
+  }).where(eq(schema.quiz.id, id)).returning();
   return {
     quiz: data,
     content: QuizContent.verify(data.content),

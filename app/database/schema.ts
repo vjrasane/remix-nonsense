@@ -1,3 +1,4 @@
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   json,
   pgEnum,
@@ -16,7 +17,7 @@ export const quizStatusEnum = pgEnum("quizStatus", [
 ]);
 
 export const quiz = pgTable("quiz", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   title: varchar("title", { length: 256 }),
   description: varchar("description", { length: 1024 }),
 
@@ -35,3 +36,6 @@ export const quiz = pgTable("quiz", {
     exercises: [],
   } satisfies QuizContent),
 });
+
+export type Quiz = InferSelectModel<typeof quiz>
+export type InsertQuiz = InferInsertModel<typeof quiz>
