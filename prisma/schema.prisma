@@ -16,7 +16,7 @@ model User {
 
 enum Status {
   DRAFT
-  RELEASED
+  ENABLED
   DISABLED
 }
 
@@ -31,4 +31,8 @@ model Quiz {
   updatedAt DateTime @updatedAt
 
   content Json
+
+  parentId String?
+  parent   Quiz?   @relation("ParentQuiz", fields: [parentId], references: [id])
+  children Quiz[]  @relation("ParentQuiz")
 }

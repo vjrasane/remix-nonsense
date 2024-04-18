@@ -8,5 +8,6 @@
   "edit": "Muokkaa",
   "addExercise": "Lisää osio",
   "exercise": "Harjoitus",
-  "editExercise": "Muokkaa harjoitusta"
+  "editExercise": "Muokkaa harjoitusta",
+  "saveChanges": "Tallenna muutokset"
 }

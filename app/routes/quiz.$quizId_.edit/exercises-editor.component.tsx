@@ -95,8 +95,6 @@ export const ExercisesEditor: FunctionComponent<{
             />
           ))}
         </div>
-        {/* <Flex direction="column" gap="2" className={exerciseList}>
-        </Flex> */}
         <Button onClick={onAdd}>{t("addExercise")}</Button>
       </div>
       <div className="flex-grow px-2">
