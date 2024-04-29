@@ -6,7 +6,6 @@ import {
   boolean,
   either,
   DecoderType,
-  nonEmptyString,
   positiveInteger,
   array,
 } from "decoders";
@@ -35,22 +34,23 @@ export const SingleInputAnswer = object({
   answers: array(string),
   caseSensitive: nullish(boolean, false),
   ignoreWhitespace: nullish(boolean, false),
+  ignoreSpecialChars: nullish(boolean, false),
 });
 
 export type SingleInputAnswer = DecoderType<typeof SingleInputAnswer>;
 
-export const Exercise = either(SingleInputAnswer);
+export const Section = either(SingleInputAnswer);
 
-export type Exercise = DecoderType<typeof Exercise>;
+export type Section = DecoderType<typeof Section>;
 
-export const QuizContent = object({
+export const ExerciseContent = object({
   version,
-  exercises: array(Exercise),
+  sections: array(Section),
 });
 
-export type QuizContent = DecoderType<typeof QuizContent>;
+export type ExerciseContent = DecoderType<typeof ExerciseContent>;
 
-export const emptyContent: QuizContent = {
+export const emptyContent: ExerciseContent = {
   version: 1,
-  exercises: [],
+  sections: [],
 };

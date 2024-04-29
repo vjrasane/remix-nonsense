@@ -1,75 +1,75 @@
-import { T, noop, set } from "lodash/fp";
+import { set } from "lodash/fp";
 import { FunctionComponent, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { StateUpdate } from "~/lib/types";
 import { cn, getSetStateActionResult } from "~/lib/utils";
-import { Exercise } from "~/model";
-import { StateUpdate } from "~/utils/types";
+import { Section } from "~/model";
 
-const ExercisePreview: FunctionComponent<{
-  exercise: Exercise;
+const SectionPreview: FunctionComponent<{
+  section: Section;
   onClick: () => void;
   selected: boolean;
-}> = ({ exercise, onClick, selected }) => {
+}> = ({ section, onClick, selected }) => {
   return (
     <div
       className={cn(
-        "h-32 w-48 max-w-48 p-1 border rounded-md border-gray-300 flex-shrink-0 cursor-pointer transition-all hover:border-gray-400 hover:border-2",
-        { "border-primary": selected }
+        "h-32 w-48 max-w-48 flex-shrink-0 cursor-pointer rounded-md border border-gray-300 p-1 transition-all hover:border-2 hover:border-gray-400",
+        { "border-primary": selected },
       )}
       onClick={onClick}
     >
-      <article className="prose flex flex-col justify-between scale-50">
-        <h1>{exercise.prompt}</h1>
-        <span>{exercise.answers[0]}</span>
+      <article className="prose flex scale-50 flex-col justify-between">
+        <h1>{section.prompt}</h1>
+        <span>{section.answers[0]}</span>
       </article>
     </div>
   );
 };
 
-const ExerciseEditor: FunctionComponent<{
-  exercise: Exercise;
-  onChange: StateUpdate<Exercise>;
-}> = ({ exercise, onChange }) => {
+const SectionEditor: FunctionComponent<{
+  section: Section;
+  onChange: StateUpdate<Section>;
+}> = ({ section, onChange }) => {
   const { t } = useTranslation();
   return (
-    <div className="w-full p-2 flex flex-col gap-2 border rounded-md border-gray-300">
+    <div className="flex w-full flex-col gap-2 rounded-md border border-gray-300 p-2">
       <Input
         placeholder={t("promptInput")}
-        value={exercise.prompt}
+        value={section.prompt}
         onChange={(e) => onChange(set("prompt", e.target.value))}
       ></Input>
       <Input
         placeholder={t("answerInput")}
-        value={exercise.answers[0] ?? ""}
+        value={section.answers[0] ?? ""}
         onChange={(e) => onChange(set(["answers", 0], e.target.value))}
       ></Input>
     </div>
   );
 };
 
-export const ExercisesEditor: FunctionComponent<{
-  exercises: Exercise[];
-  onChange: StateUpdate<Exercise[]>;
-}> = ({ exercises, onChange }) => {
+export const SectionsEditor: FunctionComponent<{
+  sections: Section[];
+  onChange: StateUpdate<Section[]>;
+}> = ({ sections, onChange }) => {
   const { t } = useTranslation();
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const selected = exercises[selectedIndex];
+  const selected = sections[selectedIndex];
 
-  const onChangeExercise = (action: SetStateAction<Exercise>) => {
+  const onChangeSection = (action: SetStateAction<Section>) => {
     onChange((exs) =>
       exs.map((ex, index) => {
         if (index !== selectedIndex) return ex;
         return getSetStateActionResult(action, ex);
-      })
+      }),
     );
   };
 
   const onAdd = () => {
     onChange((exs) => {
-      const added: Exercise = {
+      const added: Section = {
         type: "single input answer",
         prompt: "",
         answers: [],
@@ -81,15 +81,15 @@ export const ExercisesEditor: FunctionComponent<{
     });
   };
   return (
-    <div id="editor" className="h-full w-full flex flex-grow-0 overflow-y-auto">
+    <div id="editor" className="flex h-full w-full flex-grow-0 overflow-y-auto">
       <div
         id="sidebar"
-        className="h-full min-w-48 pr-2 flex flex-col justify-between gap-2 border-r border-gray-300"
+        className="flex h-full min-w-48 flex-col justify-between gap-2 border-r border-gray-300 pr-2"
       >
         <div className="flex flex-col gap-2 overflow-y-auto">
-          {exercises.map((ex, index) => (
-            <ExercisePreview
-              exercise={ex}
+          {sections.map((ex, index) => (
+            <SectionPreview
+              section={ex}
               onClick={() => setSelectedIndex(index)}
               selected={selectedIndex === index}
             />
@@ -99,7 +99,7 @@ export const ExercisesEditor: FunctionComponent<{
       </div>
       <div className="flex-grow px-2">
         {selected ? (
-          <ExerciseEditor exercise={selected} onChange={onChangeExercise} />
+          <SectionEditor section={selected} onChange={onChangeSection} />
         ) : (
           <div>{t("selectOrCreateExercise")}</div>
         )}

@@ -11,6 +11,7 @@ const config = {
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
+  blocklist: ["outline", "container", "grid"],
   theme: {
     container: {
       center: true,

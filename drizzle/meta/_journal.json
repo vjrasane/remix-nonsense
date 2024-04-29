@@ -15,6 +15,34 @@
       "when": 1713469922920,
       "tag": "0001_loud_freak",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713715609957,
+      "tag": "0002_shallow_mentor",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1713795779428,
+      "tag": "0003_elite_texas_twister",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1713795949672,
+      "tag": "0004_silly_liz_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714399770633,
+      "tag": "0005_legal_lockjaw",
+      "breakpoints": true
     }
   ]
 }

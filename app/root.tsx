@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     { locale },
     {
       headers: { "Set-Cookie": await localeCookie.serialize(locale) },
-    }
+    },
   );
 };
 
@@ -53,6 +53,10 @@ export const links: LinksFunction = () => {
       href: global,
     },
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+    {
+      rel: "stylesheet",
+      href: "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.jade.min.css",
+    },
   ];
 };
 
@@ -70,8 +74,10 @@ export default function Root() {
   return (
     <Document locale={locale} dir={i18n.dir()}>
       {/* <Theme accentColor="jade" className="h-dvh"> */}
-      <main className="h-full">
+      <header>
         <Navbar />
+      </header>
+      <main>
         <Outlet />
       </main>
       {/* </Theme> */}

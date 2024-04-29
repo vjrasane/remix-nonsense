@@ -4,10 +4,17 @@
   "title": "Otsikko",
   "description": "Kuvaus",
   "create": "Luo",
+  "close": "Sulje",
+  "start": "Aloita",
   "save": "Tallenna",
   "edit": "Muokkaa",
+  "createNew": "Luo uusi",
   "addExercise": "Lisää osio",
   "exercise": "Harjoitus",
+  "selectOrCreateExercise": "Valitse tai luo osio",
   "editExercise": "Muokkaa harjoitusta",
-  "saveChanges": "Tallenna muutokset"
+  "saveChanges": "Tallenna muutokset",
+  "image": "Kuva",
+  "inputImageUrl": "Syötä kuvan osoite",
+  "imageUrlDescription": "Tähän tekijänoikeus disclaimer nönnönnöö"
 }
